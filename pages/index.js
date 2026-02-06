@@ -6,21 +6,31 @@ import CategoryNav from "../components/CategoryNav";
 import FeaturedNews from "../components/FeaturedNews";
 import FeaturedSkeleton from "@/components/skeleton/FeaturedSkeleton";
 import NewsCardSkeleton from "@/components/skeleton/NewsCardSkeleton";
+import ErrorState from "@/components/ErrorState";
 
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  useEffect(() => {
+  const fetchNews = () => {
+    setLoading(true);
+    setError(null);
+
     getTopHeadlines()
       .then((res) => {
         setArticles(res.data.articles);
         setLoading(false);
       })
-      .catch((err) => {
-        setError("Failed to load news");
+      .catch(() => {
+        setError(
+          "Failed to load news. Please check your connection or try again.",
+        );
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchNews();
   }, []);
 
   if (loading) {
@@ -41,8 +51,10 @@ export default function Home() {
       </div>
     );
   }
-  if (error) return <p>{error}</p>;
 
+  if (error) {
+    return <ErrorState message={error} onRetry={fetchNews} />;
+  }
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <Header />
