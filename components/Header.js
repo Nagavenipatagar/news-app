@@ -1,4 +1,4 @@
-// import ThemeToggle from "./theme/ThemeToggle";
+import ThemeToggle from "./theme/ThemeToggle";
 import Link from "next/link";
 
 export default function Header() {
